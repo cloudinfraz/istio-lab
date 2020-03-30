@@ -11,6 +11,7 @@ This is istio learning series
 
 First we configure the host file for oc client 
 inventory file, grouped by their purpose:
+```
  [all:vars]
 ansible_ssh_user=chunzhan-redhat.com
 ansible_ssh_pass=1S6wC04NPlEh
@@ -18,6 +19,7 @@ ansible_ssh_pass=1S6wC04NPlEh
 [istio-client]
 clientvm.2b7a.internal
 
+```
 ansible playbook including 3 roles:
 - bookinfo deployment
 - istio-system deployment
@@ -83,10 +85,13 @@ ansible playbook including 3 roles:
 deploy Red Hat Service Mesh and the example app: bookinfo 
 
 		ansible-playbook -i hosts deploy-istio-bookinfo.yaml
+
 enable mtls for bookinfo app
+
                 ansible-playbook -i hosts deploy-mtls-site.yaml
 
-### Rolling Update
+### group var setting 
+
 ```
 istio_app1: bookinfo
 istio_ns:  bookretail-istio-system
