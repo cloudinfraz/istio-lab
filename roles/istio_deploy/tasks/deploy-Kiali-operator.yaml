@@ -1,0 +1,7 @@
+- name: check Kiali operator
+  stat: path={{playbook_dir}}/roles/istio_deploy/files/ko-sub.yaml
+  register: out
+
+- name: deploy Kiali operator
+  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/ko-sub.yaml
+  when: out|changed

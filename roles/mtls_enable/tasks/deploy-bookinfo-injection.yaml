@@ -1,0 +1,5 @@
+--- 
+- name: Add ServiceMeshMemberRoll member and process auto-injection annotation
+  command: sh {{ playbook_dir }}/roles/mtls_enable/files/auto_inject.sh {{ istio_app1 }} {{ istio_ns}}
+  register: oc_res
+- debug: var=oc_res.stdout_lines

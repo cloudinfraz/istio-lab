@@ -1,0 +1,7 @@
+- name: check elasticsearch operator
+  stat: path={{ playbook_dir }}/roles/istio_deploy/files/eo-sub.yaml
+  register: out
+  
+- name: deploy elasticsearch operator 
+  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/eo-sub.yaml
+  when: out|changed

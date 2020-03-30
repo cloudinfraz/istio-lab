@@ -1,0 +1,9 @@
+---  
+# This role contains common plays that
+
+- name: Login ocp4
+  command: oc login --username={{ cluster_username }} --password={{ cluster_password }} --server={{ cluster_url }} --insecure-skip-tls-verify=true
+  
+- name: get context
+  command: oc config current-context
+  register: context   

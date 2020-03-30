@@ -1,0 +1,24 @@
+--- 
+- name: install wget
+  yum: name={{ item }} state=latest
+  with_items:
+    - git
+    - wget
+
+- name: check Red Hat Service Mesh tempaltes
+  stat: path={{playbook_dir}}/roles/istio_deploy/files/service-mesh.yaml
+  register: out
+
+- name: download Red Hat Service Mesh tempalte
+  command: wget -P {{ playbook_dir }}/roles/bookinfo_deploy/files -O service-mesh.yaml https://github.com/Maistra/istio-operator/blob/maistra-1.1/deploy/examples/maistra_v1_servicemeshcontrolplane_cr_full.yaml
+  when: out|failed
+
+- name: process Service Mesh template
+  template:
+    src: service-mesh.yaml.j2
+    dest: "/tmp/service-mesh.yaml"
+
+- name: install Red Hat Service Mesh 
+  command: oc apply -f /tmp/service-mesh.yaml -n {{ istio_ns }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines

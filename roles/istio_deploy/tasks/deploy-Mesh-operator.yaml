@@ -1,0 +1,8 @@
+- name: check Red Hat Service Mesh operator
+  stat: path={{playbook_dir}}/roles/istio_deploy/files/sm-sub.yaml
+  register: out
+
+- name: deploy Red Hat Service Mesh operator
+  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/sm-sub.yaml
+  when: out|changed
+  

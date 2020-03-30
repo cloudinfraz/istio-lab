@@ -1,0 +1,15 @@
+---
+- name: create mTLS self-signed certificate
+  command: ./roles/mtls_enable/files/self-wild-certificate.sh {{ istio_ns  }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: Restart the Istio Ingress Gateway pod
+  command:  oc patch deployment istio-ingressgateway -p '{"spec":{"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/restartedAt": "'`date +%FT%T%z`'"}}}}}' -n {{ istio_ns  }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: create Create  the wildcard Gateway
+  command: ./roles/mtls_enable/files/self-wild-certificate.sh {{ istio_ns  }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines

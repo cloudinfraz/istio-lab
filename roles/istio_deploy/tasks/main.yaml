@@ -1,0 +1,18 @@
+---
+- name: login to the clusters
+  include_tasks: authenticate.yaml
+
+- name: deploy Elasticsearch operator
+  include_tasks: deploy-Elasticsearch-operator.yaml
+
+- name: deploy Jaeger operator
+  include_tasks: deploy-Jaeger-operator.yaml
+
+- name: deploy Kiali operator
+  include_tasks: deploy-Kiali-operator.yaml
+
+- name: deploy Red Hat Service Mesh operator
+  include_tasks: deploy-Mesh-operator.yaml
+
+- name: install Red Hat Service Mesh
+  include_tasks: install-istio.yaml

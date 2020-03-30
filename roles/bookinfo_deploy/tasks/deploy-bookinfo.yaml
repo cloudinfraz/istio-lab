@@ -1,0 +1,42 @@
+- name: install wget 
+  yum: name={{ item }} state=latest
+  with_items:
+    - git
+    - wget
+
+- name: check bookinfo yaml for deployment
+  stat: path={{playbook_dir}}/roles/bookinfo_deploy/files/bookinfo.yaml
+  register: out
+  
+- name: download bookinfo yaml for deployment
+  command: wget -P {{ playbook_dir }}/roles/bookinfo_deploy/files https://raw.githubusercontent.com/istio/istio/1.4.0/samples/bookinfo/platform/kube/bookinfo.yaml
+  when: out|failed
+
+- name: create apps project for istio
+  command: oc new-project {{ istio_app1 }}
+  register: oc_res
+  failed_when: oc_res.rc >= 2
+
+- name: create apps for istio
+  command: oc apply -f {{ playbook_dir }}/roles/bookinfo_deploy/files/bookinfo.yaml -n {{ istio_app1 }}
+  register: apps_res
+
+- name: check productpage service 
+  command: oc get route {{ item }} -n {{ istio_app1 }}
+  with_items:
+    - productpage
+    - ratings
+    - details
+    - reviews
+  register: svc_res
+  failed_when: svc_res.rc >= 4
+
+- name: expose the service for the bookinfo apps 
+  command: oc expose service {{ item }} -n {{ istio_app1 }}
+  with_items:
+    - productpage
+    - ratings
+    - details
+    - reviews
+  #when: svc_res|change
+  when: svc_res|failed
