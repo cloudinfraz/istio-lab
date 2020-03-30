@@ -13,7 +13,7 @@ First we configure the host file for oc client
 inventory file, grouped by their purpose:
 ```
  [all:vars]
-ansible_ssh_user=chunzhan-redhat.com
+ansible_ssh_user=chunzhan
 ansible_ssh_pass=1SxxxxxlEh
 
 [istio-client]
