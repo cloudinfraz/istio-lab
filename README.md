@@ -36,51 +36,16 @@ ansible playbook including 3 roles:
 └── roles
     ├── bookinfo_deploy
     │   ├── files
-    │   │   └── bookinfo.yaml
     │   └── tasks
-    │       ├── add-control-plane-ips.yaml
-    │       ├── authenticate.yaml
-    │       ├── deploy-bookinfo.yaml
-    │       └── main.yaml
     ├── istio_deploy
     │   ├── files
-    │   │   ├── jo-sub.yaml
-    │   │   └── ko-sub.yaml
     │   ├── tasks
-    │   │   ├── add-control-plane-ips.yaml
-    │   │   ├── authenticate.yaml
-    │   │   ├── deploy-Elasticsearch-operator.yaml
-    │   │   ├── deploy-Jaeger-operator.yaml
-    │   │   ├── deploy-Kiali-operator.yaml
-    │   │   ├── deploy-Mesh-operator.yaml
-    │   │   ├── install-istio.yaml
-    │   │   └── main.yaml
     │   └── templates
-    │       ├── eo-sub.yaml.j2
-    │       ├── service-mesh.yaml.j2
-    │       └── sm-sub.yaml.j2
     └── mtls_enable
         ├── files
-        │   ├── auto_inject.sh
-        │   ├── eo-sub.yaml
-        │   ├── jo-sub.yaml
-        │   ├── ko-sub.yaml
-        │   ├── self-wild-certificate.sh
-        │   ├── set_probe.sh
-        │   └── sm-sub.yaml
         ├── tasks
-        │   ├── authenticate.yaml
-        │   ├── configure-istio.yaml
-        │   ├── deploy-bookinfo-injection.yaml
-        │   ├── deploy-self-signed-certificate.yaml
-        │   └── main.yaml
         └── templates
-            ├── bookinfo-service-destinationrule.yaml.j2
-            ├── bookinfo-service-gateway.yaml.j2
-            ├── bookinfo-service-policy.yaml.j2
-            ├── bookinfo-service-virtualservice.yaml.j2
-            ├── service-mesh.yaml.j2
-            └── wildcard-gateway.yaml.j2
+
 ```
 deploy Red Hat Service Mesh and the example app: bookinfo 
 
