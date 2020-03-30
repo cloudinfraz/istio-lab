@@ -55,6 +55,28 @@ enable mtls for bookinfo app
 
                 ansible-playbook -i hosts deploy-mtls-site.yaml
 
+mtls verification 
+```
+istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} productpage.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                       STATUS     SERVER     CLIENT     AUTHN POLICY                          DESTINATION RULE
+productpage.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       productpage-service-mtls/bookinfo     productpage-client-mtls/bookinfo
+
+ istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} reviews.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
+reviews.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       reviews-service-mtls/bookinfo     reviews-client-mtls/bookinfo
+
+istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} ratings.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
+ratings.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       ratings-service-mtls/bookinfo     ratings-client-mtls/bookinfo
+
+istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} details.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
+details.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       details-service-mtls/bookinfo     details-client-mtls/bookinfo
+
+
+curl -kv https://productpage-service.apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com/productpage|
+
+```
 ### group var setting 
 
 ```
