@@ -16,5 +16,5 @@ spec:
       privateKey: /etc/istio/ingressgateway-certs/tls.key
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
     hosts:
-    - "*.apps.ocp4.test01.com"
+    - "*.{{ apps_subdomain }}"
 

@@ -3,5 +3,7 @@
   register: out
 
 - name: deploy Jaeger operator
-  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/files/jo-sub.yaml
+  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/jo-sub.yaml
+  register: oc_res
+- debug: var=oc_res.stdout_lines
   when: out|changed

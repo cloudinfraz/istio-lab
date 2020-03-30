@@ -1,8 +1,13 @@
-- name: check Red Hat Service Mesh operator
-  stat: path={{playbook_dir}}/roles/istio_deploy/files/sm-sub.yaml
-  register: out
+- name: process Red Hat Service Mesh operator template
+  template:
+    src: sm-sub.yaml.j2
+    dest: "/tmp/sm-sub.yaml"
 
 - name: deploy Red Hat Service Mesh operator
-  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/sm-sub.yaml
-  when: out|changed
-  
+  command: oc apply -f /tmp/sm-sub.yaml
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: waiting 90s for operator ready and watch statux by oc get pods -n openshift-operators
+  wait_for: timeout=90
+  delegate_to: localhost

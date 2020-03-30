@@ -1,7 +1,9 @@
-- name: check elasticsearch operator
-  stat: path={{ playbook_dir }}/roles/istio_deploy/files/eo-sub.yaml
-  register: out
+- name: process elasticsearch operator template
+  template:
+    src: eo-sub.yaml.j2
+    dest: "/tmp/eo-sub.yaml"
   
 - name: deploy elasticsearch operator 
-  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/eo-sub.yaml
-  when: out|changed
+  command: oc apply -f /tmp/eo-sub.yaml
+  register: oc_res
+- debug: var=oc_res.stdout_lines

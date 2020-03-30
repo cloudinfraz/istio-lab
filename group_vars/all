@@ -4,10 +4,11 @@
 istio_app1: bookinfo
 istio_ns:  bookretail-istio-system
 #elasticsearch version
-es_channel: 4.3
+es_channel: "4.3"
 #service mesh version
-sm_channel: 1.0
+sm_channel: "1.0"
 cluster_username: admin
 cluster_password: r3dh4t1!
 cluster_url: https://api.cluster-2b7a.2b7a.sandbox1314.opentlc.com:6443
+apps_subdomain: "apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com"
 

@@ -1,0 +1,47 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: details-client-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: details.{{ istio_app1 }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: productpage-client-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: productpage.{{ istio_app1 }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ratings-client-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: ratings.{{ istio_app1 }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: reviews-client-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: reviews.{{ istio_app1 }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL

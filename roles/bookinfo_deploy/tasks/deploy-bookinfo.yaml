@@ -21,22 +21,10 @@
   command: oc apply -f {{ playbook_dir }}/roles/bookinfo_deploy/files/bookinfo.yaml -n {{ istio_app1 }}
   register: apps_res
 
-- name: check productpage service 
-  command: oc get route {{ item }} -n {{ istio_app1 }}
-  with_items:
-    - productpage
-    - ratings
-    - details
-    - reviews
-  register: svc_res
-  failed_when: svc_res.rc >= 4
-
 - name: expose the service for the bookinfo apps 
   command: oc expose service {{ item }} -n {{ istio_app1 }}
   with_items:
     - productpage
-    - ratings
-    - details
-    - reviews
   #when: svc_res|change
-  when: svc_res|failed
+  register: svc_res
+- debug: var=svc_res.stdout_lines

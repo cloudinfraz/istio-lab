@@ -1,75 +1,103 @@
-LAMP Stack + HAProxy: Example Playbooks
+Red Hat Service Mesh Lab 
 -----------------------------------------------------------------------------
 
-- Requires Ansible 1.2
-- Expects CentOS/RHEL 6 hosts
+- ansible 2.6+
+- ocp 4.3
+- istio 1.0.9+
 
-This example is an extension of the simple LAMP deployment. Here we'll install
-and configure a web server with an HAProxy load balancer in front, and deploy
-an application to the web servers. This set of playbooks also have the
-capability to dynamically add and remove web server nodes from the deployment.
-It also includes examples to do a rolling update of a stack without affecting
-the service.
-
-(To use this demonstration with Amazon Web Services, please use the `aws` sub-directory.)
-
-You can also optionally configure a Nagios monitoring node.
+This is istio learning series
 
 ### Initial Site Setup
 
-First we configure the entire stack by listing our hosts in the 'hosts'
+First we configure the host file for oc client 
 inventory file, grouped by their purpose:
+ [all:vars]
+ansible_ssh_user=chunzhan-redhat.com
+ansible_ssh_pass=1S6wC04NPlEh
 
-		[webservers]
-		webserver1
-		webserver2
-		
-		[dbservers]
-		dbserver
-		
-		[lbservers]
-		lbserver
-		
-		[monitoring]
-		nagios
+[istio-client]
+clientvm.2b7a.internal
 
-After which we execute the following command to deploy the site:
+ansible playbook including 3 roles:
+- bookinfo deployment
+- istio-system deployment
+- mtls enable
 
-		ansible-playbook -i hosts site.yml
+```
+├── deploy-istio-bookinfo.yaml
+├── deploy-mtls-site.yaml
+├── group_vars
+│   └── all
+├── hosts
+├── LICENSE.md
+├── README.md
+└── roles
+    ├── bookinfo_deploy
+    │   ├── files
+    │   │   └── bookinfo.yaml
+    │   └── tasks
+    │       ├── add-control-plane-ips.yaml
+    │       ├── authenticate.yaml
+    │       ├── deploy-bookinfo.yaml
+    │       └── main.yaml
+    ├── istio_deploy
+    │   ├── files
+    │   │   ├── jo-sub.yaml
+    │   │   └── ko-sub.yaml
+    │   ├── tasks
+    │   │   ├── add-control-plane-ips.yaml
+    │   │   ├── authenticate.yaml
+    │   │   ├── deploy-Elasticsearch-operator.yaml
+    │   │   ├── deploy-Jaeger-operator.yaml
+    │   │   ├── deploy-Kiali-operator.yaml
+    │   │   ├── deploy-Mesh-operator.yaml
+    │   │   ├── install-istio.yaml
+    │   │   └── main.yaml
+    │   └── templates
+    │       ├── eo-sub.yaml.j2
+    │       ├── service-mesh.yaml.j2
+    │       └── sm-sub.yaml.j2
+    └── mtls_enable
+        ├── files
+        │   ├── auto_inject.sh
+        │   ├── eo-sub.yaml
+        │   ├── jo-sub.yaml
+        │   ├── ko-sub.yaml
+        │   ├── self-wild-certificate.sh
+        │   ├── set_probe.sh
+        │   └── sm-sub.yaml
+        ├── tasks
+        │   ├── authenticate.yaml
+        │   ├── configure-istio.yaml
+        │   ├── deploy-bookinfo-injection.yaml
+        │   ├── deploy-self-signed-certificate.yaml
+        │   └── main.yaml
+        └── templates
+            ├── bookinfo-service-destinationrule.yaml.j2
+            ├── bookinfo-service-gateway.yaml.j2
+            ├── bookinfo-service-policy.yaml.j2
+            ├── bookinfo-service-virtualservice.yaml.j2
+            ├── service-mesh.yaml.j2
+            └── wildcard-gateway.yaml.j2
+```
+deploy Red Hat Service Mesh and the example app: bookinfo 
 
-The deployment can be verified by accessing the IP address of your load
-balancer host in a web browser: http://<ip-of-lb>:8888. Reloading the page
-should have you hit different webservers.
-
-The Nagios web interface can be reached at http://<ip-of-nagios>/nagios/
-
-The default username and password are `nagiosadmin` / `nagiosadmin`.
-
-### Removing and Adding a Node
-
-Removal and addition of nodes to the cluster is as simple as editing the
-hosts inventory and re-running:
-
-        ansible-playbook -i hosts site.yml
+		ansible-playbook -i hosts deploy-istio-bookinfo.yaml
+enable mtls for bookinfo app
+                ansible-playbook -i hosts deploy-mtls-site.yaml
 
 ### Rolling Update
+```
+istio_app1: bookinfo
+istio_ns:  bookretail-istio-system
+#elasticsearch version
+es_channel: "4.3"
+#service mesh version
+sm_channel: "1.0"
+cluster_username: admin
+cluster_password: r3dhxxxx4
+cluster_url: https://api.cluster-2b7a.2b7a.sandbox1314.opentlc.com:6443
+apps_subdomain: "apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com"
 
-Rolling updates are the preferred way to update the web server software or
-deployed application, since the load balancer can be dynamically configured
-to take the hosts to be updated out of the pool. This will keep the service
-running on other servers so that the users are not interrupted.
-
-In this example the hosts are updated in serial fashion, which means that
-only one server will be updated at one time. If you have a lot of web server
-hosts, this behaviour can be changed by setting the `serial` keyword in
-`webservers.yml` file.
-
-Once the code has been updated in the source repository for your application
-which can be defined in the group_vars/all file, execute the following
-command:
-
-	 ansible-playbook -i hosts rolling_update.yml
-
-You can optionally pass: `-e webapp_version=xxx` to the `rolling_update`
-playbook to specify a specific version of the example webapp to deploy.
+```
 # istio-lab

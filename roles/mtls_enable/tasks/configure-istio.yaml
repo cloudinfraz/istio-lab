@@ -1,16 +1,55 @@
 --- 
-- name: create mTLS policy   
-  command: oc   apply -f {{ role_path }}/files/mTLS-policy.yaml -n bookinfo  
+- name: set Probe rewrite
+  command: sh {{ playbook_dir }}/roles/mtls_enable/files/set_probe.sh {{ istio_ns }}
+  register: oc_subres
+- debug: var=oc_subres.stdout_lines
 
-- name: create destination rules
-  command: oc   apply -f {{ role_path }}/files/destination-rules.yaml -n bookinfo 
-
-- name: process gateway and service template
+- name: process gateway template
   template:
-    src: productpage-gateway.yaml.j2
-    dest: "/tmp/productpage-gateway-{{ cluster.name }}.yaml"
-  vars:
-    namespace: bookinfo
+    src: wildcard-gateway.yaml.j2
+    dest: "/tmp/wildcard-gateway.yaml"
 
-- name: create gateway and service config
-  command: oc   apply -f /tmp/productpage-gateway-{{ cluster.name }}.yaml -n bookinfo      
+- name: deploy istio gateway with self certificate
+  command: oc apply -f  /tmp/wildcard-gateway.yaml -n {{ istio_ns }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: process istio service policy template
+  template:
+    src: bookinfo-service-policy.yaml.j2
+    dest: "/tmp/bookinfo-service-policy.yaml"
+
+- name: deploy istio service policy
+  command: oc apply -f /tmp/bookinfo-service-policy.yaml -n {{ istio_app1 }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: process istio service destinationrule template
+  template:
+    src: bookinfo-service-destinationrule.yaml.j2
+    dest: "/tmp/bookinfo-service-destinationrule.yaml"
+
+- name: deploy istio service destinationrule
+  command: oc apply -f /tmp/bookinfo-service-destinationrule.yaml -n {{ istio_app1 }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: process istio service virtualservice template
+  template:
+    src: bookinfo-service-virtualservice.yaml.j2
+    dest: "/tmp/bookinfo-service-virtualservice.yaml"
+
+- name: deploy istio service virtualservice
+  command: oc apply -f /tmp/bookinfo-service-virtualservice.yaml -n {{ istio_app1 }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: process istio service gatewaye template
+  template:
+    src: bookinfo-service-gateway.yaml.j2
+    dest: "/tmp/bookinfo-service-gateway.yaml"
+
+- name: deploy istio service gateway
+  command: oc apply -f /tmp/bookinfo-service-gateway.yaml -n {{ istio_ns }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
