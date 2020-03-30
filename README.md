@@ -14,7 +14,7 @@ inventory file, grouped by their purpose:
 ```
  [all:vars]
 ansible_ssh_user=chunzhan-redhat.com
-ansible_ssh_pass=1S6wC04NPlEh
+ansible_ssh_pass=1SxxxxxlEh
 
 [istio-client]
 clientvm.2b7a.internal
@@ -101,7 +101,7 @@ es_channel: "4.3"
 sm_channel: "1.0"
 cluster_username: admin
 cluster_password: r3dhxxxx4
-cluster_url: https://api.cluster-2b7a.2b7a.sandbox1314.opentlc.com:6443
+cluster_url: https://api.cluster-2b7a.2dasfds.sandbox1314.opentlc.com:6443
 apps_subdomain: "apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com"
 
 ```
