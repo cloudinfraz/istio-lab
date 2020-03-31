@@ -14,11 +14,8 @@ inventory file, grouped by their purpose:
 ```
  [all:vars]
 ansible_ssh_user=chunzhan
-<<<<<<< HEAD
 ansible_ssh_pass=1SxxxxxlEh
-=======
 ansible_ssh_pass=1S6wC04NPlEaa
->>>>>>> 92d88c22c9a71106ecb11c3cec9d7175a1da757d
 
 [istio-client]
 clientvm.2b7a.internal
@@ -57,7 +54,7 @@ deploy Red Hat Service Mesh and the example app: bookinfo
 
 enable mtls for bookinfo app
 
-                ansible-playbook -i hosts deploy-mtls-site.yaml
+        ansible-playbook -i hosts deploy-mtls-site.yaml
 
 mtls verification 
 ```
