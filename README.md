@@ -21,6 +21,21 @@ ansible_ssh_pass=1S6wC04NPlEaa
 clientvm.2b7a.internal
 
 ```
+### group var setting
+```
+istio_app1: bookinfo
+istio_ns:  bookretail-istio-system
+#elasticsearch version
+es_channel: "4.3"
+#service mesh version
+sm_channel: "1.0"
+cluster_username: admin
+cluster_password: r3dhxxxx4
+cluster_url: https://api.cluster-2b7a.2dasfds.sandbox1314.opentlc.com:6443
+apps_subdomain: "apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com"
+
+```
+
 ansible playbook including 3 roles:
 - bookinfo deployment
 - istio-system deployment
@@ -76,21 +91,6 @@ details.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       det
 
 
 curl -kv https://productpage-service.apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com/productpage
-
-```
-### group var setting 
-
-```
-istio_app1: bookinfo
-istio_ns:  bookretail-istio-system
-#elasticsearch version
-es_channel: "4.3"
-#service mesh version
-sm_channel: "1.0"
-cluster_username: admin
-cluster_password: r3dhxxxx4
-cluster_url: https://api.cluster-2b7a.2dasfds.sandbox1314.opentlc.com:6443
-apps_subdomain: "apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com"
 
 ```
 # istio-lab
