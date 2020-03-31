@@ -14,7 +14,11 @@ inventory file, grouped by their purpose:
 ```
  [all:vars]
 ansible_ssh_user=chunzhan
+<<<<<<< HEAD
 ansible_ssh_pass=1SxxxxxlEh
+=======
+ansible_ssh_pass=1S6wC04NPlEaa
+>>>>>>> 92d88c22c9a71106ecb11c3cec9d7175a1da757d
 
 [istio-client]
 clientvm.2b7a.internal
@@ -36,51 +40,16 @@ ansible playbook including 3 roles:
 └── roles
     ├── bookinfo_deploy
     │   ├── files
-    │   │   └── bookinfo.yaml
     │   └── tasks
-    │       ├── add-control-plane-ips.yaml
-    │       ├── authenticate.yaml
-    │       ├── deploy-bookinfo.yaml
-    │       └── main.yaml
     ├── istio_deploy
     │   ├── files
-    │   │   ├── jo-sub.yaml
-    │   │   └── ko-sub.yaml
     │   ├── tasks
-    │   │   ├── add-control-plane-ips.yaml
-    │   │   ├── authenticate.yaml
-    │   │   ├── deploy-Elasticsearch-operator.yaml
-    │   │   ├── deploy-Jaeger-operator.yaml
-    │   │   ├── deploy-Kiali-operator.yaml
-    │   │   ├── deploy-Mesh-operator.yaml
-    │   │   ├── install-istio.yaml
-    │   │   └── main.yaml
     │   └── templates
-    │       ├── eo-sub.yaml.j2
-    │       ├── service-mesh.yaml.j2
-    │       └── sm-sub.yaml.j2
     └── mtls_enable
         ├── files
-        │   ├── auto_inject.sh
-        │   ├── eo-sub.yaml
-        │   ├── jo-sub.yaml
-        │   ├── ko-sub.yaml
-        │   ├── self-wild-certificate.sh
-        │   ├── set_probe.sh
-        │   └── sm-sub.yaml
         ├── tasks
-        │   ├── authenticate.yaml
-        │   ├── configure-istio.yaml
-        │   ├── deploy-bookinfo-injection.yaml
-        │   ├── deploy-self-signed-certificate.yaml
-        │   └── main.yaml
         └── templates
-            ├── bookinfo-service-destinationrule.yaml.j2
-            ├── bookinfo-service-gateway.yaml.j2
-            ├── bookinfo-service-policy.yaml.j2
-            ├── bookinfo-service-virtualservice.yaml.j2
-            ├── service-mesh.yaml.j2
-            └── wildcard-gateway.yaml.j2
+
 ```
 deploy Red Hat Service Mesh and the example app: bookinfo 
 
@@ -90,6 +59,28 @@ enable mtls for bookinfo app
 
                 ansible-playbook -i hosts deploy-mtls-site.yaml
 
+mtls verification 
+```
+istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} productpage.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                       STATUS     SERVER     CLIENT     AUTHN POLICY                          DESTINATION RULE
+productpage.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       productpage-service-mtls/bookinfo     productpage-client-mtls/bookinfo
+
+ istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} reviews.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
+reviews.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       reviews-service-mtls/bookinfo     reviews-client-mtls/bookinfo
+
+istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} ratings.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
+ratings.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       ratings-service-mtls/bookinfo     ratings-client-mtls/bookinfo
+
+istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} details.$ERDEMO_NS.svc.cluster.local
+HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
+details.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       details-service-mtls/bookinfo     details-client-mtls/bookinfo
+
+
+curl -kv https://productpage-service.apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com/productpage
+
+```
 ### group var setting 
 
 ```
