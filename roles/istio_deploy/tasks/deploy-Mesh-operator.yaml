@@ -7,7 +7,3 @@
   command: oc apply -f /tmp/sm-sub.yaml
   register: oc_res
 - debug: var=oc_res.stdout_lines
-
-- name: waiting 90s for operator ready and watch statux by oc get pods -n openshift-operators
-  wait_for: timeout=120
-  delegate_to: localhost

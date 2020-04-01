@@ -1,11 +1,9 @@
 --- 
-- name: install wget git packages
+- name: install wget  packages
   yum: 
    name:
-      - git
       - wget
    state: present
-
 - name: check Red Hat Service Mesh tempaltes
   stat: path={{playbook_dir}}/roles/istio_deploy/files/service-mesh.yaml
   register: out
@@ -13,6 +11,8 @@
 - name: download Red Hat Service Mesh tempalte
   command: wget -P {{ playbook_dir }}/roles/istio_deploy/files https://raw.githubusercontent.com/Maistra/istio-operator/maistra-1.1/deploy/examples/maistra_v1_servicemeshcontrolplane_cr_full.yaml
   register: sm_reg
+  retries: 1
+  delay: 2
 - debug: var=sm_reg.stdout_lines
   when: out.stat.islnk is not defined
 

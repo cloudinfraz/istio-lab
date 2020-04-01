@@ -14,5 +14,8 @@
 - name: deploy Red Hat Service Mesh operator
   include_tasks: deploy-Mesh-operator.yaml
 
+- name: check 4  operators are ready
+  include_tasks: check-all-operators.yaml
+
 - name: install Red Hat Service Mesh
   include_tasks: install-istio.yaml

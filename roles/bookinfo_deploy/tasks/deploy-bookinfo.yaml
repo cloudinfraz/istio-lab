@@ -5,6 +5,8 @@
   
 - name: download bookinfo yaml for deployment
   command: wget -P {{ playbook_dir }}/roles/bookinfo_deploy/files https://raw.githubusercontent.com/istio/istio/1.4.0/samples/bookinfo/platform/kube/bookinfo.yaml
+  retries: 1
+  delay: 2
   when: out.stat.islnk is not defined
 
 - name: create apps project for istio
@@ -20,6 +22,6 @@
   command: oc expose service {{ item }} -n {{ istio_app1 }}
   with_items:
     - productpage
-  #when: svc_res|change
+  ignore_errors: True
   register: svc_res
 - debug: var=svc_res.stdout_lines

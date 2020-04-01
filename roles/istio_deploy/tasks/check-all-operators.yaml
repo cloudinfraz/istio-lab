@@ -1,0 +1,8 @@
+- name: waiting for 4 operators ard readyd
+  command: sh {{ playbook_dir }}/roles/istio_deploy/files/check_operators.sh
+  register: oc_res
+  until: oc_res.stdout.find("4") != -1
+  retries: 20
+  delay: 10
+- debug: var=oc_res.stdout_lines
+
