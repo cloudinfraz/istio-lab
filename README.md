@@ -5,7 +5,12 @@ Red Hat Service Mesh Lab
 - ocp 4.3
 - istio 1.0.9+
 
-This is istio learning series
+##This is istio learning series
+- multi tenancy
+- mTLS and authorization policies
+- Istio Reliability: Retries, Timeouts and Circuit Breaker
+- Observability
+- mixer ? 
 
 ### Initial Site Setup
 
