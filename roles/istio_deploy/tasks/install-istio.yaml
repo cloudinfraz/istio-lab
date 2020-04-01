@@ -11,10 +11,10 @@
   register: out
 
 - name: download Red Hat Service Mesh tempalte
-  command: wget -P {{ playbook_dir }}/roles/istio_deploy/files -O service-mesh.yaml https://raw.githubusercontent.com/Maistra/istio-operator/maistra-1.1/deploy/examples/maistra_v1_servicemeshcontrolplane_cr_full.yaml
+  command: wget -P {{ playbook_dir }}/roles/istio_deploy/files https://raw.githubusercontent.com/Maistra/istio-operator/maistra-1.1/deploy/examples/maistra_v1_servicemeshcontrolplane_cr_full.yaml
   register: sm_reg
 - debug: var=sm_reg.stdout_lines
-  when: out.stat.islnk is defined
+  when: out.stat.islnk is not defined
 
 - name: process Service Mesh template
   template:

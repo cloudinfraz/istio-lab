@@ -1,17 +1,11 @@
-- name: install wget git packages
-  yum: 
-   name:
-      - git 
-      - wget
-   state: present
-
+---
 - name: check bookinfo yaml for deployment
   stat: path={{playbook_dir}}/roles/bookinfo_deploy/files/bookinfo.yaml
   register: out
   
 - name: download bookinfo yaml for deployment
   command: wget -P {{ playbook_dir }}/roles/bookinfo_deploy/files https://raw.githubusercontent.com/istio/istio/1.4.0/samples/bookinfo/platform/kube/bookinfo.yaml
-  when: out.stat.islnk is defined
+  when: out.stat.islnk is not defined
 
 - name: create apps project for istio
   command: oc new-project {{ istio_app1 }}
