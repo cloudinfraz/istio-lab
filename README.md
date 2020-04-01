@@ -5,7 +5,7 @@ Red Hat Service Mesh Lab
 - ocp 4.3
 - istio 1.0.9+
 
-This is istio learning series
+Istio learning series
 ----------------------------------------------------------------------------
 - multi tenancy
 - mTLS and authorization policies
