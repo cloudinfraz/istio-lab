@@ -1,6 +1,6 @@
 [all:vars]
-ansible_ssh_user=chunzhan-redhat.com
-ansible_ssh_pass=fidssfsaf3Eh
+ansible_ssh_user=root
+ansible_ssh_pass=redhat
 
 [istio-client]
-clientvm.2b7a.internal
+ocpsync.test01.com

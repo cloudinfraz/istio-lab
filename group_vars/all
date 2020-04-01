@@ -2,13 +2,12 @@
 # Variables here are applicable to all host groups
 
 istio_app1: bookinfo
-istio_ns:  bookretail-istio-system
+istio_ns:  istio-system
 #elasticsearch version
 es_channel: "4.3"
 #service mesh version
 sm_channel: "1.0"
 cluster_username: admin
-cluster_password: r3dh4t1!
-cluster_url: https://api.cluster-2b7a.2b7a.sandbox1314.opentlc.com:6443
-apps_subdomain: "apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com"
-
+cluster_password: redhat
+cluster_url: https://api.ocp4.test01.com:6443
+apps_subdomain: "apps.ocp4.test01.com"

@@ -2,6 +2,8 @@
   stat: path={{playbook_dir}}/roles/istio_deploy/files/ko-sub.yaml
   register: out
 
-- name: deploy Kiali operator
+- name: deploy Jaeger operator
   command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/ko-sub.yaml
-  when: out|changed
+  register: ko_reg
+- debug: var=ko_reg.stdout
+  when: out.stat.islnk is defined

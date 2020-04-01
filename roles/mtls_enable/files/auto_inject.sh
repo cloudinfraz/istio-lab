@@ -13,7 +13,7 @@ do
 
 done
 
-for i in $(kubectl get pods -o jsonpath='{range.items[*]}{.metadata.name}{"\n"}{end}' -n $1);
-do
-   oc delete pod $i  -n $1;
-done
+#for i in $(kubectl get pods -o jsonpath='{range.items[*]}{.metadata.name}{"\n"}{end}' -n $1);
+#do
+#   oc delete pod $i  -n $1;
+#done
