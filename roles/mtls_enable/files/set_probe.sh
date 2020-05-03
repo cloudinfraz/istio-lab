@@ -2,7 +2,7 @@
 #CA
 
 Set_Probe() {
-   oc get smcp/service-mesh-installation -n $1  -o yaml |sed -e 's/rewriteAppHTTPProbe: false/rewriteAppHTTPProbe: true/g' | oc  apply -f -
+   oc get smcp -n $1  -o yaml |sed -e 's/rewriteAppHTTPProbe: false/rewriteAppHTTPProbe: true/g' | oc  apply -f -
 }
 
 if [ $# != 1 ];then

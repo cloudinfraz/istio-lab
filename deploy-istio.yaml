@@ -1,0 +1,10 @@
+---
+## This playbook deploys the whole application stack in this site.
+
+# Apply common configuration to all hosts
+- hosts: istio-client
+
+  roles:
+  - istio_deploy
+  tags:
+  - istio-system

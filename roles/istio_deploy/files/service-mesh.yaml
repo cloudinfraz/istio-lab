@@ -37,9 +37,6 @@ spec:
       traceSampling: 100.0
 
     kiali:
-      dashboard:
-        user: {{ cluster_username  }}
-        passphrase: {{ cluster_password }}
       # change to false to disable kiali
       enabled: true
     
