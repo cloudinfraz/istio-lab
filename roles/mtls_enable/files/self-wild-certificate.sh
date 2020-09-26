@@ -19,7 +19,7 @@ subjectAltName   = @alt_names
 DNS.2  =  *.$2
 " > $sslpath/cert.cfg
 
-openssl req -x509 -config $sslpath/cert.cfg -extensions req_ext -nodes -days 730 -newkey rsa:2048 -sha256 -keyout $sslpath/tls.key -out $sslpath/tls.crt
+openssl req -x509 -config $sslpath/cert.cfg -extensions req_ext -nodes -days 7300 -newkey rsa:2048 -sha256 -keyout $sslpath/tls.key -out $sslpath/tls.crt
 oc delete secret tls istio-ingressgateway-certs -n $1  > /dev/null 2>&1
 oc create secret tls istio-ingressgateway-certs --cert $sslpath/tls.crt --key $sslpath/tls.key -n $1
 rm -rf $sslpath

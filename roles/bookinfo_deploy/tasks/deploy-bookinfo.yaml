@@ -1,11 +1,31 @@
 ---
-- name: check bookinfo yaml for deployment
+- name: check bookinfo yaml for bookinfo deployment
   stat: path={{playbook_dir}}/roles/bookinfo_deploy/files/bookinfo.yaml
   register: out
   
-- name: download bookinfo yaml for deployment
+- name: download bookinfo yaml 
   command: wget -P {{ playbook_dir }}/roles/bookinfo_deploy/files https://raw.githubusercontent.com/istio/istio/1.4.0/samples/bookinfo/platform/kube/bookinfo.yaml
-  retries: 1
+  retries: 3
+  delay: 2
+  when: out.stat.islnk is not defined
+
+- name: check bookinfo-gateway yaml for bookinfo gateway deployment 
+  stat: path={{playbook_dir}}/roles/bookinfo_deploy/files/bookinfo-gateway.yaml
+  register: out
+
+- name: download bookinfo-gateway yaml
+  command: wget -P {{ playbook_dir }}/roles/bookinfo_deploy/files https://raw.githubusercontent.com/istio/istio/release-1.4/samples/bookinfo/networking/bookinfo-gateway.yaml
+  retries: 3
+  delay: 2
+  when: out.stat.islnk is not defined
+
+- name: check destination-rule-all.yamll file bookinfo gateway deployment
+  stat: path={{playbook_dir}}/roles/bookinfo_deploy/files/destination-rule-all.yaml
+  register: out
+
+- name: download destination-rule-all.yaml file
+  command: wget -P {{ playbook_dir }}/roles/bookinfo_deploy/files https://raw.githubusercontent.com/istio/istio/release-1.7/samples/bookinfo/networking/destination-rule-all.yaml
+  retries: 3
   delay: 2
   when: out.stat.islnk is not defined
 
@@ -14,14 +34,53 @@
   register: oc_res
   failed_when: oc_res.rc >= 2
 
-- name: create apps for istio
+- name: create bookinfo app for istio
   command: oc apply -f {{ playbook_dir }}/roles/bookinfo_deploy/files/bookinfo.yaml -n {{ istio_app1 }}
   register: apps_res
 
-- name: expose the service for the bookinfo apps 
-  command: oc expose service {{ item }} -n {{ istio_app1 }}
-  with_items:
-    - productpage
-  ignore_errors: True
-  register: svc_res
+- name: add ServiceMeshMemberRoll member and waiting several minutes for pod redeployment after auto-injection annotation
+  command: sh {{ playbook_dir }}/roles/bookinfo_deploy/files/auto_inject.sh {{ istio_app1 }} {{ istio_ns}}
+  register: oc_res
+
+- name: process wildcard-gateway-virtualservice template
+  template:
+    src: wildcard-gateway-virtualservice.yaml.j2
+    dest: "/tmp/wildcard-gateway-virtualservice.yaml"
+
+- name: deploy istio wildcard gateway and virtualservice for bookinfo
+  command: oc apply -f /tmp/wildcard-gateway-virtualservice.yaml -n {{ istio_app1 }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: process bookinfo destination-rule-all.yaml template
+  template:
+    src: destination-rule-all.yaml.j2
+    dest: "/tmp/destination-rule-all.yaml"
+
+- name: deploy istio destination-rule for bookinfo
+  command: oc apply -f  /tmp/destination-rule-all.yaml -n {{ istio_app1 }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: find out istio the temp yaml files
+  find:
+    paths: /tmp
+    file_type: file
+    patterns: '*.yaml'
+  register: wildcard_files_to_delete
+
+- name: delete istio the temp yaml files
+  file:
+      path: "{{ item.path }}"
+      state: absent
+  with_items: "{{ wildcard_files_to_delete.files }}"
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+#- name: expose the service for the bookinfo apps 
+#  command: oc expose service {{ item }} -n {{ istio_app1 }}
+#  with_items:
+#    - productpage
+#  ignore_errors: True
+#  register: svc_res
 - debug: var=svc_res.stdout_lines

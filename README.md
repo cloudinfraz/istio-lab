@@ -30,7 +30,7 @@ clientvm.2b7a.internal
 ### group var setting
 ```
 istio_app1: bookinfo
-istio_ns:  bookretail-istio-system
+ISTIO_NS:  bookretail-istio-system
 #elasticsearch version
 es_channel: "4.3"
 #service mesh version
@@ -71,7 +71,7 @@ ansible playbook including 3 roles:
 ```
 deploy Red Hat Service Mesh and the example app: bookinfo 
 
-		ansible-playbook -i hosts deploy-istio-bookinfo.yaml
+	ansible-playbook -i hosts deploy-istio-bookinfo.yaml
 
 enable mtls for bookinfo app
 
@@ -79,24 +79,17 @@ enable mtls for bookinfo app
 
 mtls verification 
 ```
-istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} productpage.$ERDEMO_NS.svc.cluster.local
-HOST:PORT                                       STATUS     SERVER     CLIENT     AUTHN POLICY                          DESTINATION RULE
-productpage.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       productpage-service-mtls/bookinfo     productpage-client-mtls/bookinfo
+export ISTIO_NS=istio-system
+export APP_NS=bookinfo
+export INGRESS_ROUTE=$(oc get route -n istio-system productpage-service-gateway -o jsonpath='{.items[*]}{.spec.host}')
+export ISTIO_INGRESSGATEWAY_POD=$(oc get pods -n istio-system |grep istio-egressgateway | awk '{print $1}')
 
- istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} reviews.$ERDEMO_NS.svc.cluster.local
-HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
-reviews.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       reviews-service-mtls/bookinfo     reviews-client-mtls/bookinfo
+curl -s -k "https://${INGRESS_ROUTE}/productpage" | grep -o "<title>.*</title>"
 
-istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} ratings.$ERDEMO_NS.svc.cluster.local
-HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
-ratings.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       ratings-service-mtls/bookinfo     ratings-client-mtls/bookinfo
-
-istioctl -n $SM_CP_NS -i $SM_CP_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} details.$ERDEMO_NS.svc.cluster.local
-HOST:PORT                                   STATUS     SERVER     CLIENT     AUTHN POLICY                      DESTINATION RULE
-details.bookinfo.svc.cluster.local:9080     OK         mTLS       mTLS       details-service-mtls/bookinfo     details-client-mtls/bookinfo
-
-
-curl -kv https://productpage-service.apps.cluster-2b7a.2b7a.sandbox1314.opentlc.com/productpage
+istioctl -n $ISTIO_NS -i $ISTIO_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} productpage.$APP_NS.svc.cluster.local
+istioctl -n $ISTIO_NS -i $ISTIO_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} reviews.$APP_NS.svc.cluster.local
+istioctl -n $ISTIO_NS -i $ISTIO_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} ratings.$APP_NS.svc.cluster.local
+istioctl -n $ISTIO_NS -i $ISTIO_NS authn tls-check ${ISTIO_INGRESSGATEWAY_POD} details.$APP_NS.svc.cluster.local
 
 ```
 # istio-lab

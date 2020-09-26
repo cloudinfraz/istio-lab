@@ -10,7 +10,7 @@
     dest: "/tmp/wildcard-gateway.yaml"
 
 - name: deploy istio gateway with self certificate
-  command: oc apply -f  /tmp/wildcard-gateway.yaml -n {{ istio_ns }}
+  command: oc apply -f  /tmp/wildcard-gateway.yaml -n {{ istio_app1 }}
   register: oc_res
 - debug: var=oc_res.stdout_lines
 
@@ -46,10 +46,25 @@
 
 - name: process istio service gatewaye template
   template:
-    src: bookinfo-service-gateway.yaml.j2
-    dest: "/tmp/bookinfo-service-gateway.yaml"
+    src: bookinfo-service-route.yaml.j2
+    dest: "/tmp/bookinfo-service-route.yaml"
 
 - name: deploy istio service gateway
-  command: oc apply -f /tmp/bookinfo-service-gateway.yaml -n {{ istio_ns }}
+  command: oc apply -f /tmp/bookinfo-service-route.yaml -n {{ istio_ns }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: find out istio the temp yaml files
+  find:
+    paths: /tmp
+    file_type: file
+    patterns: '*.yaml'
+  register: wildcard_files_to_delete
+
+- name: delete istio the temp yaml files
+  file:
+      path: "{{ item.path }}"
+      state: absent
+  with_items: "{{ wildcard_files_to_delete.files }}"
   register: oc_res
 - debug: var=oc_res.stdout_lines

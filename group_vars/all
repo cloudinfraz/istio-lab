@@ -4,10 +4,10 @@
 istio_app1: bookinfo
 istio_ns:  istio-system
 #elasticsearch version
-es_channel: "4.3"
+es_channel: "4.5.10"
 #service mesh version
-sm_channel: "1.0"
-cluster_username: admin
-cluster_password: redhat
-cluster_url: https://api.ocp4.test01.com:6443
-apps_subdomain: "apps.ocp4.test01.com"
+sm_channel: "1.1"
+cluster_username: kubeadmin
+cluster_password: yJasg-eJqoW-aDk2j-JF4xw
+cluster_url: https://api.ocp4.example.com:6443
+apps_subdomain: "apps.ocp4.example.com"
