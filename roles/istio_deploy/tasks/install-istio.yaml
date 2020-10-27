@@ -1,0 +1,39 @@
+--- 
+- name: install wget  packages
+  yum: 
+   name:
+      - wget
+   state: present
+- name: check Red Hat Service Mesh template
+  stat: path={{playbook_dir}}/roles/istio_deploy/files/service-mesh.yaml
+  register: out
+
+- name: download Red Hat Service Mesh template
+  command: wget -O {{ playbook_dir }}/roles/istio_deploy/files/service-mesh.yaml https://raw.githubusercontent.com/Maistra/istio-operator/maistra-1.1/deploy/examples/maistra_v1_servicemeshcontrolplane_cr_full.yaml
+  register: sm_reg
+- debug: var=sm_reg.stdout_lines
+  when: out.stat.exists == false
+  retries: 1
+  delay: 2
+
+#- name: Copy Service Mesh template to template directory
+#  copy:
+#    src: "{{ playbook_dir }}/roles/istio_deploy/files/service-mesh.yaml"
+#    dest: "{{ playbook_dir }}/roles/istio_deploy/templates/service-mesh.yaml.j2"
+
+#- name: Insert the namespace of istio to the template
+#  lineinfile:
+#    path: "{{ playbook_dir }}/roles/istio_deploy/templates/service-mesh.yaml.j2"
+#    regexp: '^metadata'
+#    insertafter: '^metadata'
+#    line: "{{ istio_ns }}"
+
+- name: process Service Mesh template
+  template:
+    src: service-mesh.yaml.j2
+    dest: "/tmp/service-mesh.yaml"
+
+- name: install Red Hat Service Mesh 
+  command: oc apply -f /tmp/service-mesh.yaml -n {{ istio_ns }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines

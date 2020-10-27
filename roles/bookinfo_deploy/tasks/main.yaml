@@ -1,0 +1,6 @@
+---
+- name: login to the clusters
+  include_tasks: authenticate.yaml
+
+- name: deploy bookinfo
+  include_tasks: deploy-bookinfo.yaml

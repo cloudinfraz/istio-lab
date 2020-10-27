@@ -1,0 +1,16 @@
+apiVersion: "security.istio.io/v1beta1"
+kind: "AuthorizationPolicy"
+metadata:
+  name: "httpbin-viewer"
+spec:
+  selector:
+    matchLabels:
+      app: httpbin
+  rules:
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/ip"]
+    when:
+    - key: request.auth.claims[preferred_username]
+      values: ["test"]

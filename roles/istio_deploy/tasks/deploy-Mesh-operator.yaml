@@ -1,0 +1,9 @@
+- name: process Red Hat Service Mesh operator template
+  template:
+    src: sm-sub.yaml.j2
+    dest: "/tmp/sm-sub.yaml"
+
+- name: deploy Red Hat Service Mesh operator
+  command: oc apply -f /tmp/sm-sub.yaml
+  register: oc_res
+- debug: var=oc_res.stdout_lines

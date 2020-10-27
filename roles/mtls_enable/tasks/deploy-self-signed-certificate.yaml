@@ -1,0 +1,5 @@
+--- 
+- name: create mTLS self-signed certificate and restart the Istio Ingress Gateway pod
+  command: sh {{ playbook_dir }}/roles/mtls_enable/files/self-wild-certificate.sh {{ istio_ns  }} {{ apps_subdomain }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines

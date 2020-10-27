@@ -1,0 +1,9 @@
+- name: check Jaeger operator
+  stat: path={{playbook_dir}}/roles/istio_deploy/files/jo-sub.yaml
+  register: out
+
+- name: deploy Jaeger operator
+  command: oc apply -f {{ playbook_dir }}/roles/istio_deploy/files/jo-sub.yaml
+  register: jo_reg
+- debug: var=jo_reg.stdout
+  when: out.stat.islnk is defined

@@ -1,0 +1,51 @@
+---
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: details-service-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  peers:
+  - mtls:
+      mode: STRICT
+  targets:
+  - name: details
+
+---
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: productpage-service-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  peers:
+  - mtls:
+      mode: STRICT
+  targets:
+  - name: productpage
+
+---
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: ratings-service-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  peers:
+  - mtls:
+      mode: STRICT
+  targets:
+  - name: ratings
+
+---
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: reviews-service-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  peers:
+  - mtls:
+      mode: STRICT
+  targets:
+  - name: reviews

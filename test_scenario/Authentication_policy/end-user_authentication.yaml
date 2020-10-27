@@ -1,0 +1,16 @@
+apiVersion: "authentication.istio.io/v1alpha1"
+kind: "Policy"
+metadata:
+  name: "jwt-keycloak-mtls"
+spec:
+  targets:
+    - name: httpbin
+  peers:
+    - mtls: {}
+  origins:
+  - jwt:
+      audiences:
+        - istio
+      issuer: "https://sso.ocp4.example.com/auth/realms/istio"
+      jwksUri: "https://sso.apps.ocp4.example.com/auth/realms/istio/protocol/openid-connect/certs"
+  principalBinding: USE_ORIGIN

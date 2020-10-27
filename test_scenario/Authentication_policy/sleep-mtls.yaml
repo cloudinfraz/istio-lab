@@ -1,0 +1,10 @@
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: sleep-mtls
+spec:
+  peers:
+  - mtls:
+      mode: STRICT
+  targets:
+  - name: sleep

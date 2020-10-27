@@ -1,0 +1,12 @@
+---
+- name: login to the clusters
+  include_tasks: authenticate.yaml
+
+#- name: add ServiceMeshMemberRoll member and auto-injection annotation
+#  include_tasks: deploy-bookinfo-injection.yaml
+
+- name: create mTLS self-signed certificate
+  include_tasks: deploy-self-signed-certificate.yaml
+
+- name: create mTLS policy 
+  include_tasks: configure-istio.yaml

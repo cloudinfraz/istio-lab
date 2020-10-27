@@ -1,0 +1,15 @@
+--- 
+- name: process istio rating delay traffic testing template
+  template:
+    src: bookinfo-vs-ratings-test-delay.yaml.j2
+    dest: "/tmp/bookinfo-vs-ratings-test-delay.yaml"
+
+- name: create the virtualservice rule for  rating delay traffic testing
+  command: oc apply -f /tmp/bookinfo-vs-ratings-test-delay.yaml -n {{ istio_app1 }}
+  register: oc_res
+- debug: var=oc_res.stdout_lines
+
+- name: perform rating delay traffic testing
+  command: curl -k -s -u "jason:jason" https://bookinfo-service.apps.ocp4.example.com/productpage
+  register: oc_res
+- debug: var=oc_res.stdout_lines

@@ -1,0 +1,3 @@
+---
+- name: perform bookinfo rating service delay fault injection
+  include_tasks: bookinfo-ratings-test-deploy.yaml

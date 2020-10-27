@@ -1,0 +1,16 @@
+apiVersion: "security.istio.io/v1beta1"
+kind: "AuthorizationPolicy"
+metadata:
+  name: "httpbin-viewer-group"
+spec:
+  selector:
+    matchLabels:
+      app: httpbin
+  rules:
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/ip"]
+    when:
+    - key: request.auth.claims[groups]
+      values: ["/httpgroups"]

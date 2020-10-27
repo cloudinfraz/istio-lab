@@ -1,0 +1,16 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: httpbin
+spec:
+ selector:
+   matchLabels:
+     app: httpbin
+     version: v1
+ rules:
+ - from:
+   - source:
+       principals: ["*"]
+   to:
+   - operation:
+       methods: ["GET", "POST"]

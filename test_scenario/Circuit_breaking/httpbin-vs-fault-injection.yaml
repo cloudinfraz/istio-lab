@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpbin
+  namespace: foo
+spec:
+  gateways:
+  - httpbin-gateway
+  hosts:
+  - httpbin-foo.apps.ocp4.example.com
+  http:
+  - route:
+    - destination:
+        host: httpbin
+        port:
+          number: 8000
+    fault:
+      abort:
+        httpStatus: 503
+        percentage:
+          value: 100

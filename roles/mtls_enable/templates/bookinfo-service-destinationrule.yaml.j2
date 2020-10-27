@@ -1,0 +1,81 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: details-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: details.{{ istio_app1 }}.svc.cluster.local
+  subsets:
+  - labels:
+      version: v1
+    name: v1
+  - labels:
+      version: v2
+    name: v2
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: productpage-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: productpage.{{ istio_app1 }}.svc.cluster.local
+  subsets:
+  - labels:
+      version: v1
+    name: v1
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ratings-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: ratings.{{ istio_app1 }}.svc.cluster.local
+  subsets:
+  - labels:
+      version: v1
+    name: v1
+  - labels:
+      version: v2
+    name: v2
+  - labels:
+      version: v2-mysql
+    name: v2-mysql
+  - labels:
+      version: v2-mysql-vm
+    name: v2-mysql-vm
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: reviews-mtls
+  namespace: {{ istio_app1 }}
+spec:
+  host: reviews.{{ istio_app1 }}.svc.cluster.local
+  subsets:
+  - labels:
+      version: v1
+    name: v1
+  - labels:
+      version: v2
+    name: v2
+  - labels:
+      version: v3
+    name: v3
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
